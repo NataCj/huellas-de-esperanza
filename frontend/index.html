@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Huellas de Esperanza · Adopta responsablemente</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🐾</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: {
+        brand: { DEFAULT: "#f26b4a", dark: "#dc5434", light: "#ffe6dc" },
+        cream: "#fdf6ef", ink: { DEFAULT: "#1f2633", deep: "#141a24" }, sun: "#f4b73c"
+      },
+      fontFamily: { head: ["Poppins", "system-ui", "sans-serif"], body: ["Figtree", "system-ui", "sans-serif"] }
+    } }
+  }
+</script>
+<style type="text/tailwindcss">
+  @layer components {
+    .input  { @apply w-full rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 dark:border-stone-700 dark:bg-[#232a36] dark:text-stone-100 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand/50; }
+    .lbl    { @apply mt-3 mb-1 block text-sm font-semibold text-stone-700 dark:text-stone-300; }
+    .btn    { @apply rounded-xl bg-brand px-4 py-2.5 text-sm font-bold text-white shadow-sm shadow-brand/30 transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-stone-300 disabled:shadow-none dark:disabled:bg-stone-700 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-sun; }
+    .btn-alt { @apply rounded-xl border border-stone-300 bg-transparent px-4 py-2.5 text-sm font-bold transition hover:bg-stone-100 dark:border-stone-600 dark:hover:bg-stone-800; }
+    .btn-bad { @apply rounded-xl bg-red-600 px-3 py-2 text-sm font-bold text-white transition hover:bg-red-700; }
+    .panel  { @apply mb-5 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200/70 dark:bg-[#1c222d] dark:ring-stone-800; }
+    .nav-link { @apply rounded-lg px-3 py-2 text-sm font-medium text-stone-600 transition hover:text-brand dark:text-stone-300; }
+  }
+</style>
+</head>
+<body class="min-h-screen bg-cream font-body text-stone-900 dark:bg-[#141821] dark:text-stone-100">
+
+<!-- Barra superior -->
+<header class="sticky top-0 z-40 border-b border-stone-200/70 bg-white/90 backdrop-blur dark:border-stone-800 dark:bg-[#1a1f29]/90">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3">
+    <a href="#" class="flex items-center gap-2.5">
+      <span class="relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl bg-brand text-xl text-white shadow-sm shadow-brand/40"><span class="logo-emoji">🐾</span><img class="logo-img absolute inset-0 hidden h-full w-full bg-white object-cover" alt="Logo de Huellas de Esperanza"></span>
+      <span class="leading-tight">
+        <span class="block font-head text-[15px] font-bold">Huellas de Esperanza</span>
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-brand">Fundación de adopción</span>
+      </span>
+    </a>
+
+    <nav class="flex items-center gap-1" aria-label="Secciones">
+      <button id="tabPub" aria-pressed="true" class="nav-link inline-flex items-center gap-1.5 aria-pressed:bg-brand-light aria-pressed:font-bold aria-pressed:text-brand dark:aria-pressed:bg-brand/15">
+        <span aria-hidden="true">🐾</span> Mascotas
+      </button>
+      <a href="#consulta" class="nav-link hidden lg:inline-block">Mi solicitud</a>
+      <a href="#sobre" class="nav-link hidden md:inline-block">Sobre Nosotros</a>
+      <a href="#proceso" class="nav-link hidden md:inline-block">Proceso de Adopción</a>
+      <a href="#contacto" class="nav-link hidden md:inline-block">Contacto</a>
+    </nav>
+
+    <!-- Esquina derecha: Administración -->
+    <div class="flex items-center gap-2">
+      <button id="tabAdm" aria-pressed="false" class="inline-flex items-center gap-1.5 rounded-xl border-2 border-brand/40 px-3 py-2 text-sm font-bold text-brand transition hover:border-brand hover:bg-brand-light aria-pressed:border-brand aria-pressed:bg-brand aria-pressed:text-white dark:hover:bg-brand/15">
+        <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        <span class="hidden sm:inline">Administración</span>
+      </button>
+      <a id="goAdopt" href="#catalogo" class="btn hidden items-center gap-1.5 sm:inline-flex">
+        <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3.1 4.5 6.9 4.5c2.1 0 3.6 1.1 5.1 3 1.5-1.9 3-3 5.1-3 3.8 0 6 3.9 4.5 7.3C19.5 16.4 12 21 12 21z"/></svg>
+        Adoptar
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="mx-auto max-w-6xl px-5 pb-20">
+  <!-- Catálogo público -->
+  <section id="pub">
+    <!-- Hero -->
+    <div class="grid items-start gap-8 pb-8 pt-10 sm:pt-14 lg:grid-cols-[1.25fr_1fr]">
+      <div>
+        <span class="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand-light px-3 py-1 text-xs font-bold text-brand dark:bg-brand/15">♥ Fundación Huellas de Esperanza</span>
+        <h1 class="mt-4 font-head text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl">Un hogar para <span class="text-brand">cada huella</span></h1>
+        <p class="mt-4 max-w-xl text-lg text-stone-600 dark:text-stone-400">Conoce a los animales de la Fundación Huellas de Esperanza, revisa su disponibilidad y envía tu solicitud de adopción.</p>
+      </div>
+
+      <!-- Consulta de estado de solicitud -->
+      <div id="consulta" class="scroll-mt-24 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-stone-200/70 dark:bg-[#1c222d] dark:ring-stone-800">
+        <div class="flex items-center gap-3">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-light text-lg text-brand dark:bg-brand/15">🔎</span>
+          <div>
+            <h2 class="font-head text-lg font-bold leading-tight">Consulta tu solicitud</h2>
+            <p class="text-sm text-stone-500 dark:text-stone-400">Escribe el número que recibiste al enviarla.</p>
+          </div>
+        </div>
+        <form id="cForm" class="mt-4 flex gap-2">
+          <input id="cCod" required autocomplete="off" spellcheck="false" placeholder="Ej. 53f92b7a" aria-label="Número de solicitud" class="input font-mono">
+          <button id="cBtn" class="btn shrink-0">Consultar</button>
+        </form>
+        <div id="cRes" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="mb-8 flex flex-wrap gap-3 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-stone-200/70 dark:bg-[#1c222d] dark:ring-stone-800">
+      <div class="relative flex-[2] basis-56">
+        <svg aria-hidden="true" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Buscar por nombre..." aria-label="Buscar por nombre" class="input pl-9">
+      </div>
+      <div class="relative flex-1 basis-40">
+        <svg aria-hidden="true" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4-2v-4z"/></svg>
+        <select id="fEsp" aria-label="Especie" class="input pl-9"><option value="">Todas las especies</option><option value="perro">Perros</option><option value="gato">Gatos</option><option value="otro">Otros</option></select>
+      </div>
+      <div class="relative flex-1 basis-40">
+        <span aria-hidden="true" class="pointer-events-none absolute left-3.5 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-emerald-500"></span>
+        <select id="fEst" aria-label="Estado" class="input pl-9"><option value="">Todos los estados</option><option value="disponible" selected>Disponibles</option><option value="adoptada">Adoptadas</option></select>
+      </div>
+    </div>
+
+    <!-- Listado -->
+    <div id="catalogo" class="mb-4 flex scroll-mt-24 items-center gap-3">
+      <h2 class="font-head text-xl font-bold">Nuestros <span class="text-brand">Amigos</span></h2>
+      <span id="count" class="rounded-full bg-brand-light px-2.5 py-0.5 text-xs font-bold text-brand empty:hidden dark:bg-brand/15"></span>
+    </div>
+    <div id="grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+    <!-- Proceso de adopción -->
+    <div id="proceso" class="mt-16 scroll-mt-24">
+      <h2 class="font-head text-2xl font-bold">Proceso de <span class="text-brand">Adopción</span></h2>
+      <ol class="mt-5 grid gap-4 sm:grid-cols-3">
+        <li class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200/70 dark:bg-[#1c222d] dark:ring-stone-800">
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-brand font-head font-bold text-white">1</span>
+          <h3 class="mt-3 font-head font-bold">Elige a tu amigo</h3>
+          <p class="mt-1 text-sm text-stone-600 dark:text-stone-400">Explora el catálogo y encuentra la mascota que encaje con tu hogar.</p>
+        </li>
+        <li class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200/70 dark:bg-[#1c222d] dark:ring-stone-800">
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-brand font-head font-bold text-white">2</span>
+          <h3 class="mt-3 font-head font-bold">Envía tu solicitud</h3>
+          <p class="mt-1 text-sm text-stone-600 dark:text-stone-400">Completa el formulario con tus datos y cuéntanos por qué quieres adoptar.</p>
+        </li>
+        <li class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200/70 dark:bg-[#1c222d] dark:ring-stone-800">
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-brand font-head font-bold text-white">3</span>
+          <h3 class="mt-3 font-head font-bold">Revisión y entrega</h3>
+          <p class="mt-1 text-sm text-stone-600 dark:text-stone-400">La fundación revisa tu solicitud y te contacta para conocer a tu nueva mascota.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Administración -->
+  <section id="adm" class="hidden pt-10">
+    <div class="mb-6">
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand-light px-3 py-1 text-xs font-bold text-brand dark:bg-brand/15">Panel interno</span>
+      <h1 class="mt-3 font-head text-3xl font-extrabold sm:text-4xl">Administración</h1>
+    </div>
+
+    <div class="panel">
+      <h2 class="font-head text-xl font-bold">Acceso de administrador</h2>
+      <label for="key" class="lbl">Clave de administrador</label>
+      <input id="key" type="password" autocomplete="off" placeholder="X-API-Key" class="input">
+      <div class="mt-4 flex justify-end"><button id="enter" class="btn">Entrar</button></div>
+    </div>
+
+    <div id="admBody" class="hidden">
+      <div class="panel">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="font-head text-xl font-bold">Solicitudes</h2>
+          <select id="sEst" aria-label="Filtrar solicitudes" class="input !w-auto"><option value="">Todas</option><option value="pendiente" selected>Pendientes</option><option value="aprobada">Aprobadas</option><option value="rechazada">Rechazadas</option></select>
+        </div>
+        <div id="sols" class="mt-3 divide-y divide-stone-200 dark:divide-stone-800"></div>
+      </div>
+
+      <div class="panel">
+        <h2 class="font-head text-xl font-bold">Registrar mascota</h2>
+        <div class="grid gap-x-4 sm:grid-cols-2">
+          <div><label for="nNom" class="lbl">Nombre</label><input id="nNom" class="input"></div>
+          <div><label for="nEsp" class="lbl">Especie</label><select id="nEsp" class="input"><option>perro</option><option>gato</option><option>otro</option></select></div>
+          <div><label for="nRaza" class="lbl">Raza</label><input id="nRaza" class="input"></div>
+          <div><label for="nEdad" class="lbl">Edad (meses)</label><input id="nEdad" type="number" min="0" class="input"></div>
+        </div>
+        <label for="nFoto" class="lbl">URL de la foto</label><input id="nFoto" type="url" class="input">
+        <label for="nDesc" class="lbl">Descripción</label><textarea id="nDesc" rows="2" class="input"></textarea>
+        <div class="mt-4 flex justify-end"><button id="addPet" class="btn">Guardar mascota</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Pie de página -->
+<footer id="contacto" class="bg-ink-deep text-stone-300">
+  <div class="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:grid-cols-2 lg:grid-cols-4">
+    <div id="sobre" class="scroll-mt-24">
+      <div class="flex items-center gap-2.5">
+        <span class="relative grid h-9 w-9 place-items-center overflow-hidden rounded-xl bg-brand text-lg text-white"><span class="logo-emoji">🐾</span><img class="logo-img absolute inset-0 hidden h-full w-full bg-white object-cover" alt="Logo de Huellas de Esperanza"></span>
+        <span class="font-head font-bold text-white">Huellas de Esperanza</span>
+      </div>
+      <p class="mt-3 text-sm text-stone-400">Dedicados al rescate, rehabilitación y adopción responsable de perros y gatos.</p>
+    </div>
+    <div>
+      <h3 class="font-head text-sm font-bold text-white">Enlaces Rápidos</h3>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li><a href="#catalogo" class="transition hover:text-brand">Ver Mascotas</a></li>
+        <li><a href="#proceso" class="transition hover:text-brand">Requisitos de Adopción</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="font-head text-sm font-bold text-white">Contacto</h3>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li class="flex items-center gap-2"><span class="text-brand">✉</span> contacto@huellasdeesperanza.org</li>
+        <li class="flex items-center gap-2"><span class="text-brand">☎</span> +57 300 123 4567</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="font-head text-sm font-bold text-white">Síguenos</h3>
+      <div class="mt-3 flex gap-2">
+        <a href="#" aria-label="Instagram" class="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-sm font-bold transition hover:bg-brand hover:text-white">ig</a>
+        <a href="#" aria-label="Facebook" class="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-sm font-bold transition hover:bg-brand hover:text-white">f</a>
+        <a href="#" aria-label="TikTok" class="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-sm font-bold transition hover:bg-brand hover:text-white">♪</a>
+      </div>
+    </div>
+  </div>
+  <p class="border-t border-white/10 py-4 text-center text-xs text-stone-500">© Fundación Huellas de Esperanza · Adopta responsablemente</p>
+</footer>
+
+<!-- Modal de solicitud -->
+<dialog id="dlg" class="w-[calc(100%-2rem)] max-w-md rounded-2xl bg-white p-6 text-stone-900 shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-sm dark:bg-[#1c222d] dark:text-stone-100">
+  <div class="mb-1 flex items-center gap-2">
+    <span class="grid h-9 w-9 place-items-center rounded-full bg-brand-light text-brand dark:bg-brand/15">♥</span>
+    <h2 id="dTitle" class="font-head text-xl font-bold"></h2>
+  </div>
+  <p class="text-sm text-stone-500 dark:text-stone-400">Tu solicitud será revisada por la fundación.</p>
+  <label for="sNom" class="lbl">Nombre completo</label><input id="sNom" class="input">
+  <label for="sMail" class="lbl">Correo electrónico</label><input id="sMail" type="email" class="input">
+  <label for="sTel" class="lbl">Teléfono</label><input id="sTel" type="tel" class="input">
+  <label for="sViv" class="lbl">Tipo de vivienda</label>
+  <select id="sViv" class="input"><option>Casa con patio</option><option>Casa sin patio</option><option>Apartamento</option></select>
+  <label for="sMot" class="lbl">¿Por qué quieres adoptar?</label><textarea id="sMot" rows="3" class="input"></textarea>
+  <div class="mt-5 flex justify-end gap-2"><button id="cancel" class="btn-alt">Cancelar</button><button id="send" class="btn">Enviar solicitud</button></div>
+</dialog>
+
+<!-- Modal: perfil ampliado de la mascota -->
+<dialog id="dlgPet" class="w-[calc(100%-2rem)] max-w-3xl overflow-hidden rounded-3xl bg-white p-0 text-stone-900 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm dark:bg-[#1c222d] dark:text-stone-100">
+  <div class="grid md:grid-cols-2">
+    <div class="relative bg-stone-200 dark:bg-stone-800">
+      <img id="pFoto" alt="" onerror="this.removeAttribute('src')" class="h-64 w-full object-cover md:h-full md:min-h-[420px]">
+      <div id="pTag" class="absolute left-4 top-4 rounded-full bg-white/95 shadow-sm"></div>
+    </div>
+    <div class="flex flex-col p-6">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p id="pEsp" class="text-xs font-bold uppercase tracking-wider text-brand"></p>
+          <h2 id="pNom" class="font-head text-3xl font-extrabold"></h2>
+        </div>
+        <button data-close aria-label="Cerrar" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-stone-100 text-lg font-bold text-stone-500 transition hover:bg-brand-light hover:text-brand dark:bg-stone-800">✕</button>
+      </div>
+      <dl id="pDatos" class="mt-5 grid grid-cols-3 gap-2"></dl>
+      <h3 class="mt-5 font-head text-sm font-bold">Sobre mí</h3>
+      <p id="pDesc" class="mt-1 text-stone-600 dark:text-stone-400"></p>
+      <button id="pAdopt" class="btn mt-6 inline-flex w-full items-center justify-center gap-2 md:mt-auto"></button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Modal: tarjeta del solicitante (admin) -->
+<dialog id="dlgSol" class="w-[calc(100%-2rem)] max-w-lg overflow-hidden rounded-3xl bg-white p-0 text-stone-900 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm dark:bg-[#1c222d] dark:text-stone-100">
+  <div id="solCard"></div>
+</dialog>
+
+<!-- Modal: solicitud enviada -->
+<dialog id="dlgOk" class="w-[calc(100%-2rem)] max-w-sm rounded-3xl bg-white p-6 text-center text-stone-900 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm dark:bg-[#1c222d] dark:text-stone-100">
+  <span class="mx-auto grid h-14 w-14 place-items-center rounded-full bg-emerald-100 text-2xl text-emerald-600">✓</span>
+  <h2 class="mt-3 font-head text-xl font-bold">¡Solicitud enviada!</h2>
+  <p class="mt-1 text-sm text-stone-500 dark:text-stone-400">Guarda este número para consultar el estado de tu solicitud.</p>
+  <div class="mt-4 flex items-center gap-2 rounded-xl bg-cream p-2 pl-4 dark:bg-[#232a36]">
+    <code id="okCod" class="min-w-0 flex-1 break-all text-left font-mono text-lg font-bold text-brand"></code>
+    <button id="okCopy" class="btn-alt shrink-0 !px-3 !py-2">Copiar</button>
+  </div>
+  <div class="mt-5 grid grid-cols-2 gap-2">
+    <button data-close class="btn-alt">Cerrar</button>
+    <button id="okVer" class="btn">Ver estado</button>
+  </div>
+</dialog>
+
+<div id="msg" role="status" class="fixed bottom-5 left-1/2 z-50 hidden max-w-[90%] -translate-x-1/2 rounded-xl bg-stone-900 px-4 py-3 text-sm font-medium text-white"></div>
+
+<script>
+// ===== CONFIGURACIÓN: cambia estas URLs al desplegar =====
+const API = { mascotas: "http://localhost:8001", adopciones: "http://localhost:8002" };
+// Imagen del logo: pon aquí la ruta o URL (ej. "logo.png"). Si queda vacío o falla, se muestra 🐾
+const LOGO_URL = "";
+// =========================================================
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const TAGS = {
+  disponible: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200", pendiente: "bg-amber-50 text-amber-700 ring-1 ring-amber-200",
+  aprobada: "bg-stone-100 text-stone-600 ring-1 ring-stone-200",       adoptada: "bg-stone-100 text-stone-600 ring-1 ring-stone-200",
+  rechazada: "bg-red-50 text-red-700 ring-1 ring-red-200"
+};
+const tag = e => `<span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold ${TAGS[e] || ""}"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>${e}</span>`;
+const HEART = `<svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3.1 4.5 6.9 4.5c2.1 0 3.6 1.1 5.1 3 1.5-1.9 3-3 5.1-3 3.8 0 6 3.9 4.5 7.3C19.5 16.4 12 21 12 21z"/></svg>`;
+let adminKey = "", petId = null;
+const petsById = {}, solsById = {};
+
+// Logo con imagen
+if (LOGO_URL) document.querySelectorAll(".logo-img").forEach(img => {
+  img.onload = () => { img.classList.remove("hidden"); img.previousElementSibling.classList.add("hidden"); };
+  img.src = LOGO_URL;
+});
+
+// Cerrar diálogos con el botón ✕ o haciendo clic fuera
+document.querySelectorAll("dialog").forEach(d => d.addEventListener("click", e => {
+  if (e.target === d || e.target.closest("[data-close]")) d.close();
+}));
+
+function toast(t, err) {
+  const m = $("msg"); m.textContent = t;
+  m.className = "fixed bottom-5 left-1/2 z-50 max-w-[90%] -translate-x-1/2 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-lg " + (err ? "bg-red-600" : "bg-ink");
+  clearTimeout(toast.t); toast.t = setTimeout(() => m.classList.add("hidden"), 4000);
+}
+async function call(base, path, opt = {}) {
+  const r = await fetch(API[base] + path, { ...opt,
+    headers: { "Content-Type": "application/json", ...(opt.admin ? { "X-API-Key": adminKey } : {}) },
+    body: opt.body ? JSON.stringify(opt.body) : undefined });
+  if (r.status === 204) return null;
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(typeof j.detail === "string" ? j.detail : (j.detail?.[0]?.msg || "Error " + r.status));
+  return j;
+}
+const edad = m => m == null ? "" : m < 12 ? `${m} meses` : `${Math.floor(m / 12)} ${Math.floor(m / 12) === 1 ? "año" : "años"}`;
+
+async function loadPets() {
+  const p = new URLSearchParams();
+  if ($("q").value) p.set("q", $("q").value);
+  if ($("fEsp").value) p.set("especie", $("fEsp").value);
+  if ($("fEst").value) p.set("estado", $("fEst").value);
+  try {
+    const pets = await call("mascotas", "/mascotas?" + p);
+    pets.forEach(m => petsById[m.id] = m);
+    $("count").textContent = pets.length + (pets.length === 1 ? " encontrado" : " encontrados");
+    $("grid").innerHTML = pets.length ? pets.map(m => `
+      <article data-pet="${m.id}" tabindex="0" aria-label="Ver perfil de ${esc(m.nombre)}" class="flex cursor-pointer flex-col overflow-hidden rounded-2xl outline-none focus-visible:ring-4 focus-visible:ring-brand/40 bg-white shadow-sm ring-1 ring-stone-200/70 transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand/10 dark:bg-[#1c222d] dark:ring-stone-800">
+        <div class="relative overflow-hidden">
+          <img src="${esc(m.foto_url)}" alt="Foto de ${esc(m.nombre)}" loading="lazy" onerror="this.removeAttribute('src')" class="aspect-[4/3] w-full bg-stone-200 object-cover transition duration-300 hover:scale-105 dark:bg-stone-800">
+          <div class="absolute left-3 top-3 rounded-full bg-white/95 shadow-sm">${tag(m.estado)}</div>
+          <span aria-hidden="true" class="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white/95 text-stone-400 shadow-sm">${HEART}</span>
+        </div>
+        <div class="flex flex-1 flex-col gap-1 p-4">
+          <div class="flex items-center justify-between gap-2"><h3 class="font-head text-xl font-bold">${esc(m.nombre)}</h3><span class="text-[11px] font-bold uppercase tracking-wider text-stone-400">${esc(m.especie)}</span></div>
+          <p class="text-sm font-semibold capitalize text-brand">${esc(m.especie)}${m.raza ? " · " + esc(m.raza) : ""}${m.edad_meses != null ? " · " + edad(m.edad_meses) : ""}</p>
+          <p class="mb-4 mt-1 text-sm text-stone-600 dark:text-stone-400">${esc(m.descripcion)}</p>
+          <button class="btn mt-auto inline-flex items-center justify-center gap-2" data-id="${m.id}" data-n="${esc(m.nombre)}" ${m.estado !== "disponible" ? "disabled" : ""}>${HEART}${m.estado === "disponible" ? "Adoptar a " + esc(m.nombre) : "Ya tiene hogar"}</button>
+        </div>
+      </article>`).join("")
+      : `<p class="col-span-full rounded-2xl bg-white py-12 text-center text-stone-500 ring-1 ring-stone-200/70 dark:bg-[#1c222d] dark:ring-stone-800">No encontramos mascotas con esos filtros. Prueba quitar alguno.</p>`;
+  } catch (e) {
+    $("count").textContent = "";
+    $("grid").innerHTML = `<p class="col-span-full rounded-2xl bg-white py-12 text-center text-stone-500 ring-1 ring-stone-200/70 dark:bg-[#1c222d] dark:ring-stone-800">No se pudo conectar con la API de Mascotas. Verifica que esté en línea.</p>`;
+  }
+}
+$("grid").onclick = e => {
+  const b = e.target.closest("button[data-id]");
+  if (b) { if (b.disabled) return; petId = b.dataset.id; $("dTitle").textContent = "Adoptar a " + b.dataset.n; $("dlg").showModal(); return; }
+  const c = e.target.closest("[data-pet]"); if (c) openPet(c.dataset.pet);
+};
+$("grid").addEventListener("keydown", e => {
+  const c = e.target.closest("[data-pet]");
+  if (c && e.target === c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openPet(c.dataset.pet); }
+});
+
+// Perfil ampliado de la mascota
+function openPet(id) {
+  const m = petsById[id]; if (!m) return;
+  $("pFoto").src = m.foto_url || ""; if (!m.foto_url) $("pFoto").removeAttribute("src");
+  $("pFoto").alt = "Foto de " + m.nombre;
+  $("pTag").innerHTML = tag(m.estado);
+  $("pEsp").textContent = m.especie + (m.raza ? " · " + m.raza : "");
+  $("pNom").textContent = m.nombre;
+  const dato = (k, v) => `<div class="rounded-xl bg-brand-light/60 p-3 text-center dark:bg-brand/10"><dt class="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">${k}</dt><dd class="mt-0.5 font-head text-sm font-bold capitalize">${esc(v) || "—"}</dd></div>`;
+  $("pDatos").innerHTML = dato("Especie", m.especie) + dato("Raza", m.raza) + dato("Edad", edad(m.edad_meses));
+  $("pDesc").textContent = m.descripcion || "Pronto contaremos más sobre esta mascota.";
+  const disp = m.estado === "disponible";
+  $("pAdopt").disabled = !disp;
+  $("pAdopt").innerHTML = HEART + (disp ? "Adoptar a " + esc(m.nombre) : "Ya tiene hogar");
+  $("pAdopt").onclick = () => { $("dlgPet").close(); petId = m.id; $("dTitle").textContent = "Adoptar a " + m.nombre; $("dlg").showModal(); };
+  $("dlgPet").showModal();
+}
+$("cancel").onclick = () => $("dlg").close();
+$("send").onclick = async () => {
+  try {
+    const s = await call("adopciones", "/solicitudes", { method: "POST", body: {
+      mascota_id: petId, solicitante_nombre: $("sNom").value, email: $("sMail").value,
+      telefono: $("sTel").value || null, tipo_vivienda: $("sViv").value, motivo: $("sMot").value || null } });
+    $("dlg").close(); toast("Solicitud enviada. Tu código es " + s.id.slice(0, 8));
+    showCode(s.id);
+  } catch (e) { toast(e.message, true); loadPets(); }
+};
+["q", "fEsp", "fEst"].forEach(i => $(i).addEventListener("input", loadPets));
+
+function tab(adm) {
+  $("pub").classList.toggle("hidden", adm); $("adm").classList.toggle("hidden", !adm);
+  $("tabPub").setAttribute("aria-pressed", !adm); $("tabAdm").setAttribute("aria-pressed", adm);
+}
+$("tabPub").onclick = () => { tab(false); loadPets(); };
+$("tabAdm").onclick = () => tab(true);
+// Botón "Adoptar" de la barra: vuelve al catálogo si estás en Administración
+$("goAdopt").addEventListener("click", () => { if ($("pub").classList.contains("hidden")) $("tabPub").click(); });
+$("enter").onclick = async () => {
+  adminKey = $("key").value;
+  try { await loadSols(); $("admBody").classList.remove("hidden"); } catch (e) { toast(e.message, true); }
+};
+
+async function loadSols() {
+  const q = $("sEst").value ? "?estado=" + $("sEst").value : "";
+  const rows = await call("adopciones", "/solicitudes" + q, { admin: true });
+  rows.forEach(s => solsById[s.id] = s);
+  $("sols").innerHTML = rows.length ? rows.map(s => `
+    <div class="flex flex-wrap items-center justify-between gap-3 py-4">
+      <div class="min-w-0">
+        <p><strong>${esc(s.solicitante_nombre)}</strong> quiere adoptar a <strong class="text-brand">${esc(s.mascota?.nombre || "(mascota no disponible)")}</strong></p>
+        <p class="text-sm text-stone-500 dark:text-stone-400">${esc(s.email)}${s.telefono ? " · " + esc(s.telefono) : ""}${s.tipo_vivienda ? " · " + esc(s.tipo_vivienda) : ""}</p>
+        ${s.motivo ? `<p class="mt-1 text-sm italic text-stone-500 dark:text-stone-400">${esc(s.motivo)}</p>` : ""}
+      </div>
+      <div class="flex flex-wrap items-center gap-2">${tag(s.estado)}
+        <button data-s="${s.id}" class="btn-alt inline-flex items-center gap-1.5 !py-2"><svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Ver más</button>
+        ${s.estado === "pendiente" ? `<button class="btn" data-a="aprobar" data-id="${s.id}">Aprobar</button><button class="btn-bad" data-a="rechazar" data-id="${s.id}">Rechazar</button>` : ""}
+      </div>
+    </div>`).join("")
+    : `<p class="py-8 text-center text-stone-500">No hay solicitudes en este estado.</p>`;
+}
+$("sEst").onchange = () => loadSols().catch(e => toast(e.message, true));
+async function act(id, a) {
+  try {
+    await call("adopciones", `/solicitudes/${id}/${a}`, { method: "PATCH", admin: true, body: {} });
+    toast(a === "aprobar" ? "Solicitud aprobada" : "Solicitud rechazada"); await loadSols();
+  } catch (err) { toast(err.message, true); loadSols(); }
+}
+$("sols").onclick = e => {
+  const n = e.target.closest("button[data-s]"); if (n) return openSol(n.dataset.s);
+  const b = e.target.closest("button[data-a]"); if (!b) return;
+  act(b.dataset.id, b.dataset.a);
+};
+$("dlgSol").addEventListener("click", e => {
+  const b = e.target.closest("button[data-a]"); if (!b) return;
+  $("dlgSol").close(); act(b.dataset.id, b.dataset.a);
+});
+
+// Tarjeta del solicitante
+function openSol(id) {
+  const s = solsById[id]; if (!s) return;
+  const ini = String(s.solicitante_nombre || "?").trim().split(/\s+/).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+  const fecha = s.fecha_solicitud || s.creado_en || s.created_at || s.fecha;
+  const fila = (ico, k, v) => v ? `<div class="flex items-start gap-3 py-2.5"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-brand-light text-brand dark:bg-brand/15">${ico}</span><div class="min-w-0"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">${k}</p><p class="break-words font-medium">${v}</p></div></div>` : "";
+  const mas = s.mascota;
+  $("solCard").innerHTML = `
+    <div class="relative bg-gradient-to-br from-brand to-[#f79a5d] px-6 pb-6 pt-5 text-white">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-white/85">Solicitud de adopción</p>
+          <p class="mt-0.5 font-mono text-sm text-white/80">#${esc(String(s.id).slice(0, 8))}</p>
+        </div>
+        <button data-close aria-label="Cerrar" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 text-lg font-bold transition hover:bg-white/30">✕</button>
+      </div>
+      <div class="mt-5 flex items-center gap-4">
+        <span class="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-white font-head text-xl font-extrabold text-brand shadow-lg">${esc(ini)}</span>
+        <div class="min-w-0">
+          <h2 class="font-head text-2xl font-bold leading-tight text-white">${esc(s.solicitante_nombre)}</h2>
+          <div class="mt-1.5 inline-block rounded-full bg-white">${tag(s.estado)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="px-6 pb-6 pt-2">
+      <div class="divide-y divide-stone-100 dark:divide-stone-800">
+        ${fila("✉", "Correo", s.email ? `<a href="mailto:${esc(s.email)}" class="text-brand hover:underline">${esc(s.email)}</a>` : "")}
+        ${fila("☎", "Teléfono", s.telefono ? `<a href="tel:${esc(s.telefono)}" class="text-brand hover:underline">${esc(s.telefono)}</a>` : "")}
+        ${fila("⌂", "Vivienda", esc(s.tipo_vivienda))}
+        ${fila("🗓", "Fecha", fecha ? esc(new Date(fecha).toLocaleString("es-CO", { dateStyle: "medium", timeStyle: "short" })) : "")}
+      </div>
+      ${s.motivo ? `<div class="mt-3 rounded-2xl bg-cream p-4 dark:bg-[#232a36]"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">¿Por qué quiere adoptar?</p><p class="mt-1 italic text-stone-700 dark:text-stone-300">“${esc(s.motivo)}”</p></div>` : ""}
+      <div class="mt-3 flex items-center gap-3 rounded-2xl p-3 ring-1 ring-stone-200 dark:ring-stone-800">
+        ${mas?.foto_url ? `<img src="${esc(mas.foto_url)}" alt="" onerror="this.remove()" class="h-14 w-14 rounded-xl object-cover">` : `<span class="grid h-14 w-14 place-items-center rounded-xl bg-brand-light text-2xl dark:bg-brand/15">🐾</span>`}
+        <div class="min-w-0"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Quiere adoptar a</p><p class="font-head font-bold">${esc(mas?.nombre || "(mascota no disponible)")}</p>${mas?.especie ? `<p class="text-sm capitalize text-stone-500">${esc(mas.especie)}${mas.raza ? " · " + esc(mas.raza) : ""}</p>` : ""}</div>
+      </div>
+      ${s.estado === "pendiente" ? `<div class="mt-5 grid grid-cols-2 gap-2"><button class="btn-bad !py-2.5" data-a="rechazar" data-id="${s.id}">Rechazar</button><button class="btn" data-a="aprobar" data-id="${s.id}">Aprobar</button></div>` : ""}
+    </div>`;
+  $("dlgSol").showModal();
+}
+$("addPet").onclick = async () => {
+  try {
+    await call("mascotas", "/mascotas", { method: "POST", admin: true, body: {
+      nombre: $("nNom").value, especie: $("nEsp").value, raza: $("nRaza").value || null,
+      edad_meses: $("nEdad").value ? +$("nEdad").value : null, foto_url: $("nFoto").value || null, descripcion: $("nDesc").value || null } });
+    toast("Mascota guardada"); ["nNom", "nRaza", "nEdad", "nFoto", "nDesc"].forEach(i => $(i).value = "");
+  } catch (e) { toast(e.message, true); }
+};
+// ===== Consulta pública del estado de una solicitud =====
+const MIS = "huellas_mis_solicitudes";
+const misCodigos = () => { try { return JSON.parse(localStorage.getItem(MIS)) || []; } catch { return []; } };
+function guardarCodigo(id) { try { localStorage.setItem(MIS, JSON.stringify([...new Set([String(id), ...misCodigos()])].slice(0, 10))); } catch {} }
+
+function showCode(id) {
+  guardarCodigo(id);
+  $("okCod").textContent = String(id).slice(0, 8);
+  $("okCopy").textContent = "Copiar";
+  $("okCopy").onclick = async () => { try { await navigator.clipboard.writeText(String(id).slice(0, 8)); $("okCopy").textContent = "¡Copiado!"; } catch {} };
+  $("okVer").onclick = () => { $("dlgOk").close(); $("cCod").value = String(id).slice(0, 8); consultar(); $("consulta").scrollIntoView({ behavior: "smooth" }); };
+  $("dlgOk").showModal();
+}
+
+const ESTADO_INFO = {
+  pendiente: { ico: "⏳", t: "En revisión", d: "La fundación está revisando tu solicitud. Te contactaremos pronto.", c: "from-amber-400 to-amber-500" },
+  aprobada:  { ico: "🎉", t: "¡Aprobada!", d: "¡Felicitaciones! La fundación se comunicará contigo para coordinar la entrega.", c: "from-emerald-500 to-emerald-600" },
+  rechazada: { ico: "💔", t: "No aprobada", d: "Esta vez no fue posible. Puedes intentarlo con otro de nuestros amigos.", c: "from-red-500 to-red-600" }
+};
+
+async function consultar() {
+  let cod = $("cCod").value.trim().replace(/^#/, "");
+  if (!cod) return;
+  // Si escribe solo los 8 primeros caracteres y la solicitud se envió desde este navegador, se usa el número completo
+  const full = misCodigos().find(c => c.toLowerCase().startsWith(cod.toLowerCase()));
+  if (full) cod = full;
+  $("cBtn").disabled = true;
+  $("cRes").innerHTML = `<p class="mt-4 animate-pulse text-sm text-stone-500">Buscando tu solicitud…</p>`;
+  try {
+    const s = await call("adopciones", "/solicitudes/" + encodeURIComponent(cod));
+    const i = ESTADO_INFO[s.estado] || { ico: "📄", t: s.estado, d: "", c: "from-stone-400 to-stone-500" };
+    const fecha = s.fecha_solicitud || s.creado_en || s.created_at || s.fecha;
+    const mas = s.mascota;
+    $("cRes").innerHTML = `
+      <div class="mt-4 overflow-hidden rounded-2xl ring-1 ring-stone-200 dark:ring-stone-800">
+        <div class="flex items-center gap-3 bg-gradient-to-br ${i.c} p-4 text-white">
+          <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/25 text-xl">${i.ico}</span>
+          <div class="min-w-0">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-white/85">Solicitud #${esc(String(s.id ?? cod).slice(0, 8))}</p>
+            <p class="font-head text-lg font-bold leading-tight">${esc(i.t)}</p>
+          </div>
+        </div>
+        <div class="space-y-3 p-4">
+          ${i.d ? `<p class="text-sm text-stone-600 dark:text-stone-400">${esc(i.d)}</p>` : ""}
+          ${mas?.nombre ? `<div class="flex items-center gap-3 rounded-xl bg-cream p-2.5 dark:bg-[#232a36]">
+            ${mas.foto_url ? `<img src="${esc(mas.foto_url)}" alt="" onerror="this.remove()" class="h-12 w-12 rounded-lg object-cover">` : `<span class="grid h-12 w-12 place-items-center rounded-lg bg-brand-light text-xl dark:bg-brand/15">🐾</span>`}
+            <div class="min-w-0"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Mascota</p><p class="font-head font-bold">${esc(mas.nombre)}</p></div>
+          </div>` : ""}
+          <div class="flex flex-wrap gap-x-5 gap-y-1 text-sm">
+            ${s.solicitante_nombre ? `<p><span class="text-stone-400">Solicitante:</span> <strong>${esc(s.solicitante_nombre)}</strong></p>` : ""}
+            ${fecha ? `<p><span class="text-stone-400">Enviada:</span> <strong>${esc(new Date(fecha).toLocaleDateString("es-CO", { dateStyle: "medium" }))}</strong></p>` : ""}
+          </div>
+        </div>
+      </div>`;
+  } catch (e) {
+    $("cRes").innerHTML = `
+      <div class="mt-4 flex items-start gap-3 rounded-2xl bg-red-50 p-4 text-sm text-red-700 ring-1 ring-red-200 dark:bg-red-500/10 dark:text-red-300 dark:ring-red-500/30">
+        <span class="text-lg">⚠️</span>
+        <div><p class="font-bold">No encontramos esa solicitud</p><p class="mt-0.5">Revisa el número e inténtalo de nuevo. (${esc(e.message)})</p></div>
+      </div>`;
+  } finally { $("cBtn").disabled = false; }
+}
+$("cForm").addEventListener("submit", e => { e.preventDefault(); consultar(); });
+
+loadPets();
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: huellas-mascotas-api
+    runtime: docker
+    rootDir: mascotas-api
+    healthCheckPath: /health
+    envVars:
+      - {key: SUPABASE_URL, sync: false}
+      - {key: SUPABASE_KEY, sync: false}
+      - {key: ADMIN_API_KEY, sync: false}
+  - type: web
+    name: huellas-adopciones-api
+    runtime: docker
+    rootDir: adopciones-api
+    healthCheckPath: /health
+    envVars:
+      - {key: SUPABASE_URL, sync: false}
+      - {key: SUPABASE_KEY, sync: false}
+      - {key: ADMIN_API_KEY, sync: false}
+      - {key: MASCOTAS_API_URL, sync: false}   # URL pública de huellas-mascotas-api
+  - type: web
+    name: huellas-frontend
+    runtime: static
+    staticPublishPath: frontend

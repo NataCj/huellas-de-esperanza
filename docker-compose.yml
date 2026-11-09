@@ -1,0 +1,12 @@
+services:
+  mascotas-api:
+    build: ./mascotas-api
+    env_file: ./mascotas-api/.env
+    ports: ["8001:8000"]
+  adopciones-api:
+    build: ./adopciones-api
+    env_file: ./adopciones-api/.env
+    environment:
+      MASCOTAS_API_URL: http://mascotas-api:8000
+    ports: ["8002:8000"]
+    depends_on: [mascotas-api]
