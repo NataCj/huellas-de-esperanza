@@ -171,6 +171,8 @@
           <div><label for="nEsp" class="lbl">Especie</label><select id="nEsp" class="input"><option>perro</option><option>gato</option><option>otro</option></select></div>
           <div><label for="nRaza" class="lbl">Raza</label><input id="nRaza" class="input"></div>
           <div><label for="nEdad" class="lbl">Edad (meses)</label><input id="nEdad" type="number" min="0" class="input"></div>
+          <div><label for="nSexo" class="lbl">Sexo</label><select id="nSexo" class="input"><option value="">Sin especificar</option><option value="macho">Macho</option><option value="hembra">Hembra</option></select></div>
+          <div><label for="nTam" class="lbl">Tamaño</label><select id="nTam" class="input"><option value="">Sin especificar</option><option value="pequeno">Pequeño</option><option value="mediano">Mediano</option><option value="grande">Grande</option></select></div>
         </div>
         <label for="nFoto" class="lbl">URL de la foto</label><input id="nFoto" type="url" class="input">
         <label for="nDesc" class="lbl">Descripción</label><textarea id="nDesc" rows="2" class="input"></textarea>
@@ -321,6 +323,7 @@ async function call(base, path, opt = {}) {
   if (!r.ok) throw new Error(typeof j.detail === "string" ? j.detail : (j.detail?.[0]?.msg || "Error " + r.status));
   return j;
 }
+const TAM = { pequeno: "Pequeño", mediano: "Mediano", grande: "Grande" };
 const edad = m => m == null ? "" : m < 12 ? `${m} meses` : `${Math.floor(m / 12)} ${Math.floor(m / 12) === 1 ? "año" : "años"}`;
 
 async function loadPets() {
@@ -340,8 +343,8 @@ async function loadPets() {
           <span aria-hidden="true" class="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white/95 text-stone-400 shadow-sm">${HEART}</span>
         </div>
         <div class="flex flex-1 flex-col gap-1 p-4">
-          <div class="flex items-center justify-between gap-2"><h3 class="font-head text-xl font-bold">${esc(m.nombre)}</h3><span class="text-[11px] font-bold uppercase tracking-wider text-stone-400">${esc(m.especie)}</span></div>
-          <p class="text-sm font-semibold capitalize text-brand">${esc(m.especie)}${m.raza ? " · " + esc(m.raza) : ""}${m.edad_meses != null ? " · " + edad(m.edad_meses) : ""}</p>
+          <div class="flex items-center justify-between gap-2"><h3 class="font-head text-xl font-bold">${esc(m.nombre)}</h3>${m.sexo ? `<span class="text-[11px] font-bold uppercase tracking-wider text-stone-400">${m.sexo === "hembra" ? "♀" : "♂"} ${esc(m.sexo)}</span>` : ""}</div>
+          <p class="text-sm font-semibold capitalize text-brand">${esc(m.especie)}${m.raza ? " · " + esc(m.raza) : ""}${m.edad_meses != null ? " · " + edad(m.edad_meses) : ""}${m.tamano ? " · " + (TAM[m.tamano] || esc(m.tamano)) : ""}</p>
           <p class="mb-4 mt-1 text-sm text-stone-600 dark:text-stone-400">${esc(m.descripcion)}</p>
           <button class="btn mt-auto inline-flex items-center justify-center gap-2" data-id="${m.id}" data-n="${esc(m.nombre)}" ${m.estado !== "disponible" ? "disabled" : ""}>${HEART}${m.estado === "disponible" ? "Adoptar a " + esc(m.nombre) : "Ya tiene hogar"}</button>
         </div>
@@ -371,7 +374,8 @@ function openPet(id) {
   $("pEsp").textContent = m.especie + (m.raza ? " · " + m.raza : "");
   $("pNom").textContent = m.nombre;
   const dato = (k, v) => `<div class="rounded-xl bg-brand-light/60 p-3 text-center dark:bg-brand/10"><dt class="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">${k}</dt><dd class="mt-0.5 font-head text-sm font-bold capitalize">${esc(v) || "—"}</dd></div>`;
-  $("pDatos").innerHTML = dato("Especie", m.especie) + dato("Raza", m.raza) + dato("Edad", edad(m.edad_meses));
+  $("pDatos").innerHTML = dato("Especie", m.especie) + dato("Raza", m.raza) + dato("Edad", edad(m.edad_meses))
+    + dato("Sexo", m.sexo) + dato("Tamaño", TAM[m.tamano] || m.tamano) + dato("Estado", m.estado);
   $("pDesc").textContent = m.descripcion || "Pronto contaremos más sobre esta mascota.";
   const disp = m.estado === "disponible";
   $("pAdopt").disabled = !disp;
@@ -483,8 +487,9 @@ $("addPet").onclick = async () => {
   try {
     await call("mascotas", "/mascotas", { method: "POST", admin: true, body: {
       nombre: $("nNom").value, especie: $("nEsp").value, raza: $("nRaza").value || null,
-      edad_meses: $("nEdad").value ? +$("nEdad").value : null, foto_url: $("nFoto").value || null, descripcion: $("nDesc").value || null } });
-    toast("Mascota guardada"); ["nNom", "nRaza", "nEdad", "nFoto", "nDesc"].forEach(i => $(i).value = "");
+      edad_meses: $("nEdad").value ? +$("nEdad").value : null, foto_url: $("nFoto").value || null, descripcion: $("nDesc").value || null,
+      sexo: $("nSexo").value || null, tamano: $("nTam").value || null } });
+    toast("Mascota guardada"); ["nNom", "nRaza", "nEdad", "nFoto", "nDesc", "nSexo", "nTam"].forEach(i => $(i).value = "");
   } catch (e) { toast(e.message, true); }
 };
 // ===== Consulta pública del estado de una solicitud =====
